@@ -81,7 +81,7 @@ if (!self.define) {
     });
   };
 }
-define("./sw.js",['./workbox-c0c7782e'], function (workbox) { 'use strict';
+define("./sw.js",['./workbox-9cbebd83'], function (workbox) { 'use strict';
 
   /**
   * Welcome to your Workbox-powered service worker!
@@ -103,7 +103,12 @@ define("./sw.js",['./workbox-c0c7782e'], function (workbox) { 'use strict';
     plugins: [{
       requestWillFetch: async ({
         request
-      }) => (Request(), console.log("development"), request)
+      }) => {
+        const newReq = new Request(request.url, workbox._extends({}, request, {
+          redirect: 'follow'
+        }));
+        return newReq;
+      }
     }]
   }), 'GET');
   workbox.registerRoute(/.*/i, new workbox.NetworkOnly({
